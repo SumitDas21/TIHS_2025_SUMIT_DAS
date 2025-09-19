@@ -152,7 +152,7 @@ Do you think this assumption holds for the Iris dataset? Why or why not?
 # Question 4 & 5: Explanation inside code
 
 """
-Question 4.
+Question 4
 Why does Logistic Regression assume a linear decision boundary?
 
 Answer:
@@ -164,9 +164,9 @@ The decision boundary occurs where probabilities of two classes are equal:
 This simplifies to a linear equation in x (a line in 2D, a hyperplane in higher dimensions).
 Therefore, logistic regression assumes a linear decision boundary.
 
--------------------------------------------------
 
-Question 5.
+
+Question 5 
 Does this assumption hold for the Iris dataset?
 
 Answer:
@@ -200,3 +200,77 @@ sns.heatmap(confusion_matrix(y_test, y_pred_lr), annot=True, fmt='d', cmap='Blue
 plt.title("Confusion Matrix - Logistic Regression")
 plt.show()
 
+"
+Question 6 :
+If we increased the number of trees (n_estimators) in Random Forest, how might the performance change?
+"
+
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.metrics import accuracy_score
+import matplotlib.pyplot as plt
+
+estimators = [10, 50, 100, 200, 500]
+accuracies = []
+
+for n in estimators:
+    rf = RandomForestClassifier(n_estimators=n, random_state=42)
+    rf.fit(X_train, y_train)
+    y_pred = rf.predict(X_test)
+    accuracies.append(accuracy_score(y_test, y_pred))
+
+plt.plot(estimators, accuracies, marker='o')
+plt.title("Effect of n_estimators on Accuracy")
+plt.xlabel("Number of Trees (n_estimators)")
+plt.ylabel("Accuracy")
+plt.show()
+
+"
+Question 7 :
+Between Logistic Regression and Random Forest, which model performed better? Why might that be?
+"
+
+
+from sklearn.linear_model import LogisticRegression
+from sklearn.metrics import classification_report, accuracy_score
+from sklearn.ensemble import RandomForestClassifier
+
+# Logistic Regression
+log_reg = LogisticRegression(max_iter=1000, random_state=42)
+log_reg.fit(X_train, y_train)
+y_pred_lr = log_reg.predict(X_test)
+
+print("Accuracy (Logistic Regression):", accuracy_score(y_test, y_pred_lr))
+print("\nClassification Report (Logistic Regression):\n", classification_report(y_test, y_pred_lr))
+
+# Random Forest (ensure it's trained)
+rf = RandomForestClassifier(n_estimators=100, random_state=42)
+rf.fit(X_train, y_train)
+y_pred_rf = rf.predict(X_test)
+
+print("Accuracy (Random Forest):", accuracy_score(y_test, y_pred_rf))
+print("\nClassification Report (Random Forest):\n", classification_report(y_test, y_pred_rf))
+
+"
+Question 8 :
+If we had a much larger dataset with noisy features, which model would you expect to generalize better, and why?
+" 
+
+
+import numpy as np
+from sklearn.datasets import make_classification
+
+# Create a larger noisy dataset
+X_noisy, y_noisy = make_classification(
+    n_samples=5000, n_features=50, n_informative=10, n_redundant=10,
+    n_classes=3, random_state=42
+)
+
+# Logistic Regression
+log_reg = LogisticRegression(max_iter=1000, random_state=42)
+log_reg.fit(X_noisy, y_noisy)
+print("Logistic Regression Accuracy (Noisy Data):", log_reg.score(X_noisy, y_noisy))
+
+# Random Forest
+rf = RandomForestClassifier(n_estimators=100, random_state=42)
+rf.fit(X_noisy, y_noisy)
+print("Random Forest Accuracy (Noisy Data):", rf.score(X_noisy, y_noisy))

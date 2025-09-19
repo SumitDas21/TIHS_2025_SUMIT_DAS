@@ -86,4 +86,117 @@ plt.show()
 
 print("Final Answer: The two most useful features for separating species are 'Petal Length' and 'Petal Width'.")
 
+"
+QUESTION 2 :
+Looking at the correlation heatmap, which pair of features are most correlated? What might this imply?
+"
+
+
+# Import required libraries
+from sklearn.datasets import load_iris  # Ensure this import is included
+import pandas as pd
+import seaborn as sns
+import matplotlib.pyplot as plt
+
+# Load iris dataset
+iris = load_iris()
+X = pd.DataFrame(iris.data, columns=iris.feature_names)
+y = pd.Series(iris.target, name="species")
+
+# Map numeric labels to species names
+species_map = dict(zip(range(3), iris.target_names))
+y = y.map(species_map)
+
+# Combine for quick view
+df = pd.concat([X, y], axis=1)
+
+# Heat Map Visualisation
+sns.heatmap(df.drop("species", axis=1).corr(), annot=True, cmap="coolwarm")
+plt.title("Feature Correlation Heatmap")
+plt.show()
+
+"
+Question 3 :
+Why do we split the dataset into training and testing sets?
+"
+
+# Train/Test Split
+from sklearn.model_selection import train_test_split
+
+X_train, X_test, y_train, y_test = train_test_split(
+    X, y, test_size=0.3, random_state=42, stratify=y
+)
+
+print("Training samples:", X_train.shape[0])
+print("Test samples:", X_test.shape[0])
+
+
+print("\nQuestion 3: Why do we split the dataset into training and testing sets?")
+print("Answer:")
+print("- To train the model on one part of the data (training set).")
+print("- To evaluate it on unseen data (testing set).")
+print("- This ensures we measure how well the model generalizes, not just memorizes.")
+print("- If the model performs well only on training data but poorly on test data, it indicates overfitting.")
+
+
+"
+Question 4.
+
+Logistic Regression assumes a linear decision boundary. why?
+
+Question 5.
+
+Do you think this assumption holds for the Iris dataset? Why or why not?
+"
+
+# Question 4 & 5: Explanation inside code
+
+"""
+Question 4.
+Why does Logistic Regression assume a linear decision boundary?
+
+Answer:
+Logistic regression computes probabilities using a linear combination of input features:
+    z = w · x + b
+This value z is passed through a sigmoid (binary case) or softmax (multiclass case).
+The decision boundary occurs where probabilities of two classes are equal:
+    w1 · x + b1 = w2 · x + b2
+This simplifies to a linear equation in x (a line in 2D, a hyperplane in higher dimensions).
+Therefore, logistic regression assumes a linear decision boundary.
+
+-------------------------------------------------
+
+Question 5.
+Does this assumption hold for the Iris dataset?
+
+Answer:
+- The Iris dataset has 3 classes: Setosa, Versicolor, and Virginica.
+- Setosa is linearly separable from the other two, which is why logistic regression
+  classifies it perfectly (100% precision and recall).
+- However, Versicolor and Virginica overlap in feature space.
+  Logistic regression still does well (~93% accuracy), but some misclassifications occur.
+- Hence, the linear decision boundary assumption holds perfectly for Setosa,
+  but not completely for Versicolor vs Virginica.
+  A non-linear model (like SVM with RBF kernel or Decision Trees) may perform better.
+"""
+
+# Let's also reconfirm with the trained model results
+from sklearn.linear_model import LogisticRegression
+from sklearn.metrics import accuracy_score, classification_report, confusion_matrix
+import seaborn as sns
+import matplotlib.pyplot as plt
+
+# Train Logistic Regression
+log_reg = LogisticRegression(max_iter=200)
+log_reg.fit(X_train, y_train)
+y_pred_lr = log_reg.predict(X_test)
+
+# Accuracy & classification report
+print("Accuracy (Logistic Regression):", accuracy_score(y_test, y_pred_lr))
+print("\nClassification Report:\n", classification_report(y_test, y_pred_lr))
+
+# Confusion matrix
+sns.heatmap(confusion_matrix(y_test, y_pred_lr), annot=True, fmt='d', cmap='Blues')
+plt.title("Confusion Matrix - Logistic Regression")
+plt.show()
 

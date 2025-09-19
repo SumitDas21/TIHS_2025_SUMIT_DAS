@@ -16,23 +16,22 @@ from sklearn.linear_model import LogisticRegression
 from sklearn.model_selection import train_test_split
 
 
-# ==========================
 # Load the Iris dataset
-# ==========================
+
 iris = load_iris()
 X = pd.DataFrame(iris.data, columns=iris.feature_names)
 y = pd.Series(iris.target, name="species")
 
-# Map numeric labels to species names
+ # Map numeric labels to species names
+ 
 species_map = dict(zip(range(3), iris.target_names))
 y = y.map(species_map)
 
-# Combine for easy viewing
+ Combine for easy viewing
 df = pd.concat([X, y], axis=1)
 
-# ==========================
 # Pairplot visualization
-# ==========================
+
 sns.pairplot(df, hue="species")
 plt.suptitle("Pairplot of Iris Dataset Features", y=1.02, fontsize=14)
 plt.show()
@@ -45,9 +44,9 @@ print("   - Versicolor and Virginica are somewhat overlapping, but still separab
 print("2. Sepal length and sepal width show significant overlap, making them less useful.")
 print("------------------------------------------------\n")
 
-# ==========================
+
 # Decision boundary (using petal length & width)
-# ==========================
+
 X_pw = X[["petal length (cm)", "petal width (cm)"]]
 X_train, X_test, y_train, y_test = train_test_split(X_pw, y, test_size=0.2, random_state=42, stratify=y)
 
@@ -82,9 +81,9 @@ plt.ylabel("Petal Width (cm)")
 plt.legend()
 plt.show()
 
-# ==========================
+
 # Final Answer
-# ==========================
+
 print("Final Answer: The two most useful features for separating species are 'Petal Length' and 'Petal Width'.")
 
 
